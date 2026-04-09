@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Row 1: KPI Statistics -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="section-title fs-5"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Live Statistics
+                </h5>
+                <span class="badge bg-light text-muted p-2 px-3 border">Last Sync: Just Now</span>
+            </div>
+
+            <div class="row g-4 text-center">
+                <div class="col-md-3 border-end">
+                    <div class="mb-2">
+                        <span class="display-6 fw-800 text-dark">{{ analysis.total_students }}</span>
+                    </div>
+                    <p class="text-muted small uppercase fw-bold mb-0">Active Students</p>
+                </div>
+                <div class="col-md-3 border-end">
+                    <div class="mb-2">
+                        <span class="display-6 fw-800 text-dark">{{ analysis.accepted_companies }}</span>
+                    </div>
+                    <p class="text-muted small uppercase fw-bold mb-0">Partner Companies</p>
+                </div>
+                <div class="col-md-3 border-end">
+                    <div class="mb-2">
+                        <span class="display-6 fw-800 text-primary">{{ (analysis.placements_done /
+                            (analysis.total_students or 1) * 100)|round|int }}%</span>
+                    </div>
+                    <p class="text-muted small uppercase fw-bold mb-0">Placement Rate</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-2">
+                        <span class="display-6 fw-800 text-dark">{{ analysis.accepted_jobs }}</span>
+                    </div>
+                    <p class="text-muted small uppercase fw-bold mb-0">Verified Jobs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Analytics and Actions -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-5 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h5 class="fw-800 mb-1">Branch-wise Student Participation</h5>
+                    <p class="text-muted small mb-0">See distribution of job applications across departments</p>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-light btn-sm border" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Export CSV</a></li>
+                        <li><a class="dropdown-item" href="#">Print Report</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="height: 350px;">
+                {% if branch_labels %}
+                <canvas id="adminBranchChart"></canvas>
+                {% else %}
+                <div class="h-100 d-flex align-items-center justify-content-center bg-light rounded-4">
+                    <p class="text-muted small">Insufficient data for visualization</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm p-4 bg-white">
+                    <h6 class="text-muted small fw-bold uppercase mb-4">Pending Verifications</h6>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning-subtle text-warning p-2 rounded-3 me-3">
+                                    <i class="bi bi-building fs-5"></i>
+                                </div>
+                                <span class="fw-semibold">Companies</span>
+                            </div>
+                            <span class="badge bg-warning text-white rounded-pill">{{ analysis.waiting_companies
+                                }}</span>
+                        </div>
+                        <a href="/admin/companies/waiting" class="btn btn-sm btn-outline-dark w-100">Review
+                            Companies</a>
+                    </div>
+                    <div class="mb-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info-subtle text-info p-2 rounded-3 me-3">
+                                    <i class="bi bi-briefcase fs-5"></i>
+                                </div>
+                                <span class="fw-semibold">Job Posts</span>
+                            </div>
+                            <span class="badge bg-info text-white rounded-pill">{{ analysis.waiting_jobs }}</span>
+                        </div>
+                        <a href="/admin/jobs/waiting" class="btn btn-sm btn-outline-dark w-100">Review Jobs</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <h6 class="text-muted small fw-bold uppercase mb-4">Today's Activity</h6>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small fw-semibold">New Applications</span>
+                            <span class="small fw-bold">{{ analysis.apps_today }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small fw-semibold">Jobs Posted Today</span>
+                            <span class="small fw-bold">{{ analysis.jobs_today }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small fw-semibold">Student Onboarding</span>
+                            <span class="small fw-bold">{{ analysis.students_today }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if branch_labels %}
+        const ctx = document.getElementById('adminBranchChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ branch_labels | tojson }},
+        datasets: [{
+            label: 'Applications',
+            data: {{ branch_counts | tojson }},
+        backgroundColor: '#f97316',
+        borderRadius: 8,
+        barThickness: 32,
+                }]
+            },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#0f172a',
+                padding: 12,
+                cornerRadius: 8,
+                titleFont: { family: 'Inter', size: 13, weight: 'bold' }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#f1f5f9', drawBorder: false },
+                ticks: { color: '#64748b', font: { family: 'Inter' } }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#64748b', font: { family: 'Inter' } }
+            }
+        }
+    }
+        });
+    {% endif %}
+    });
+</script>
+
+<style>
+    .fw-800 {
+        font-weight: 800;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fffbeb;
+    }
+
+    .bg-info-subtle {
+        background-color: #f0f9ff;
+    }
+</style>
+{% endblock %}

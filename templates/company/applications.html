@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Application Management{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="section-title mb-1">{% if title %}{{ title }}{% else %}Job Candidates{% endif %}</h2>
+            {% if applications %}
+            <p class="text-muted small">Tracking {{ applications|length }} applicants for your job portfolio.</p>
+            <p class="text-muted small">If you place a student in your company, they will not be visible in the
+                applications list for other companies.</p>
+            {% else %}
+            <p class="text-muted small">Awaiting new applications</p>
+            {% endif %}
+        </div>
+        <a href="/company/home" class="btn btn-outline-dark btn-sm rounded-3 px-4">
+            <i class="bi bi-chevron-left me-2"></i> Dashboard Overview
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light text-muted fw-bold">
+                <tr>
+                    <th class="ps-4 py-3">Candidate Profile</th>
+                    <th class="py-3">Role Applied</th>
+                    <th class="py-3">Applied On</th>
+                    <th class="py-3 text-center">Status</th>
+                    <th class="py-3 text-end pe-4">Manage Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if applications %}
+                {% for app in applications %}
+                <tr class="{% if app.status == 'Offer Accepted' %}table-success-subtle{% endif %}">
+                    <td class="ps-4">
+                        <div class="fw-800 text-dark">{{ app.student.name }}</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">{{ app.student.email }} | {{
+                            app.student.branch }}</div>
+                    </td>
+                    <td>
+                        <div class="fw-bold text-primary">{{ app.job.title }}</div>
+                        <div class="text-muted small">JD #{{ app.job.id }}</div>
+                    </td>
+                    <td class="text-muted small">
+                        {{ app.applied.strftime('%d %b %Y') }}
+                    </td>
+                    <td class="text-center">
+                        <span
+                            class="badge rounded-pill {% if app.status == 'Shortlisted' or app.status == 'Interviewed' %}bg-primary-subtle text-primary{% elif app.status == 'Offer Accepted' %}bg-success-subtle text-success{% elif app.status == 'Rejected' %}bg-danger-subtle text-danger{% else %}bg-light text-muted border{% endif %} px-3">
+                            {{ app.status }}
+                        </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end align-items-center gap-2">
+                            {% if app.student.resume %}
+                            <a href="/static/uploads/resumes/{{ app.student.resume }}" target="_blank"
+                                class="btn btn-sm btn-outline-secondary px-3">
+                                <i class="bi bi-file-earmark-person"></i> Resume
+                            </a>
+                            {% endif %}
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-dark dropdown-toggle px-3" type="button"
+                                    data-bs-toggle="dropdown" {% if app.status=='Placed' or app.job.status=='Closed'
+                                    %}disabled{% endif %}>
+                                    Update
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 p-2">
+                                    <li><a class="dropdown-item small py-2"
+                                            href="/company/application/{{ app.id }}/change-status/Review Pending">In-Review</a>
+                                    </li>
+                                    <li><a class="dropdown-item small py-2"
+                                            href="/company/application/{{ app.id }}/change-status/Shortlisted">Shortlisted</a>
+                                    </li>
+                                    <li><a class="dropdown-item small py-2"
+                                            href="/company/application/{{ app.id }}/change-status/Interviewed">Interviewed</a>
+                                    </li>
+                                    <li><a class="dropdown-item small py-2"
+                                            href="/company/application/{{ app.id }}/change-status/Offered">Offered</a>
+                                    </li>
+                                    <li><a class="dropdown-item small py-2"
+                                            href="/company/application/{{ app.id }}/change-status/Placed">Placed</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item small py-2 rounded-3 text-danger"
+                                            href="/company/application/{{ app.id }}/change-status/Rejected">Reject
+                                            Application</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <div class="text-muted">No applications received yet. </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .fw-800 {
+        font-weight: 800;
+    }
+
+    .bg-primary-subtle {
+        background-color: #eff6ff;
+    }
+
+    .bg-success-subtle {
+        background-color: #dcfce7;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fee2e2;
+    }
+
+    .table-success-subtle {
+        background-color: #f0fdf4 !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Companies{% endblock %}
+
+{% block content %}
+
+<div class="section-header">
+    <h2 class="section-title">Verified Organizations</h2>
+    <a href="/admin/panel" class="btn btn-outline-dark btn-sm">Return to Panel</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <form method="GET" action="/admin/company-list">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text border-0 bg-white ps-4"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="q" class="form-control border-0 ps-2"
+                    placeholder="Search for companies or sectors..." value="{{ query }}">
+                <button class="btn btn-primary px-5 fw-bold" type="submit">Filter Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if query %}
+<div class="mb-3">
+    <span class="badge bg-light text-dark p-2 border">
+        {{ companies|length }} result(s) for "<strong>{{ query }}</strong>"
+    </span>
+</div>
+{% endif %}
+
+{% if companies %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th class="ps-4">Company ID</th>
+                <th>Name</th>
+                <th>Contact Email</th>
+                <th>Industry</th>
+                <th>Registered On</th>
+                <th>Approval Status</th>
+                <th>Account Status</th>
+                <th class="text-end pe-4">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in companies %}
+            <tr>
+                <td class="ps-4 text-muted fw-bold">#{{ c.id }}</td>
+                <td>
+                    <div class="fw-bold">{{ c.name }}</div>
+                </td>
+                <td>{{ c.email }}</td>
+                <td>
+                    <span class="text-muted small uppercase fw-bold">{{ c.industry }}</span>
+                </td>
+                <td>{{ c.created.strftime('%d %b %Y') }}</td>
+                <td>
+                    {% if c.admin_approval == 'Verified' %}
+                    <span
+                        class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill small">Approved</span>
+                    {% else %}
+                    <span
+                        class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-1 rounded-pill small">Awaiting
+                        Approval</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if c.active %}
+                    <span
+                        class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill small">Active</span>
+                    {% else %}
+                    <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 rounded-pill small">Access
+                        Blocked</span>
+                    {% endif %}
+                </td>
+                <td class="text-end pe-4">
+                    {% if c.active %}
+                    <a href="/admin/companies/blacklist/{{ c.id }}" class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('Disable this company account?')">Disable</a>
+                    {% else %}
+                    <span class="text-muted small">Access Blocked</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5">
+        <div class="text-muted mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                class="bi bi-building-exclamation mb-2" viewBox="0 0 16 16">
+                <path
+                    d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1V1z" />
+                <path
+                    d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM4 8.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z" />
+                <path
+                    d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0zm-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 1 0V11a.5.5 0 0 0-.5-.5zm0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+            </svg>
+        </div>
+        {% if query %}
+        <p class="h5 text-muted">No companies found matching "<strong>{{ query }}</strong>".</p>
+        <p class="text-muted">Try searching with another company name or sector.</p>
+        {% else %}
+        <p class="h5 text-muted">No companies registered yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .bg-success-subtle {
+        background-color: #e8f5e9 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #ffebee !important;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff3e0 !important;
+    }
+
+    .text-success {
+        color: #2e7d32 !important;
+    }
+
+    .text-danger {
+        color: #d32f2f !important;
+    }
+
+    .text-warning {
+        color: #ef6c00 !important;
+    }
+
+    .border-success-subtle {
+        border-color: #c8e6c9 !important;
+    }
+
+    .border-danger-subtle {
+        border-color: #ffcdd2 !important;
+    }
+
+    .border-warning-subtle {
+        border-color: #ffe0b2 !important;
+    }
+
+    .uppercase {
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-primary:active {
+        background-color: #e96b00 !important;
+        border-color: #e96b00 !important;
+    }
+
+    .btn-primary:focus-visible {
+        box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.35);
+    }
+</style>
+
+{% endblock %}

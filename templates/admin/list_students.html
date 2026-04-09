@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+
+<div class="section-header">
+    <h2 class="section-title">Student Records</h2>
+    <a href="/admin/panel" class="btn btn-outline-dark btn-sm">Return to Panel</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <form method="GET" action="/admin/student-list">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text border-0 bg-white ps-4"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="q" class="form-control border-0 ps-2"
+                    placeholder="Search by name, ID, or email..." value="{{ query }}">
+                <button class="btn btn-primary px-5 fw-bold" type="submit">Search Records</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if query %}
+<div class="mb-3">
+    <span class="badge bg-light text-dark p-2 border">
+        {{ students|length }} result(s) for "<strong>{{ query }}</strong>"
+    </span>
+</div>
+{% endif %}
+
+{% if students %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th class="ps-4">Student ID</th>
+                <th>Student Name</th>
+                <th>Email Address</th>
+                <th>Contact Number</th>
+                <th>Branch</th>
+                <th>Registered On</th>
+                <th>Applications</th>
+                <th>Account Status</th>
+                <th class="text-end pe-4">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td class="ps-4 text-muted fw-bold">#{{ s.id }}</td>
+                <td>
+                    <div class="fw-bold">{{ s.name }}</div>
+                </td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.contact }}</td>
+                <td>{{ s.branch }}</td>
+                <td>{{ s.created.strftime('%d %b %Y') }}</td>
+                <td>{{ s.applications|length }}</td>
+                <td>
+                    {% if s.active %}
+                    <span
+                        class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">Active</span>
+                    {% else %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        Access Blocked</span>
+                    {% endif %}
+                </td>
+                <td class="text-end pe-4">
+                    {% if s.active %}
+                    <a href="/admin/students/blacklist/{{ s.id }}" class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('Disable this student account?')"> Disable </a>
+
+                    {% else %}
+                    <span class="text-muted small">Access Blocked</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5">
+        {% if query %}
+        <p class="h5 text-muted">No students found matching "<strong>{{ query }}</strong>".</p>
+        <p class="text-muted">Try searching with another name or student ID.</p>
+        {% else %}
+        <p class="h5 text-muted">No students registered yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .bg-success-subtle {
+        background-color: #e8f5e9 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #ffebee !important;
+    }
+
+    .text-success {
+        color: #2e7d32 !important;
+    }
+
+    .text-danger {
+        color: #d32f2f !important;
+    }
+
+    .border-success-subtle {
+        border-color: #c8e6c9 !important;
+    }
+
+    .border-danger-subtle {
+        border-color: #ffcdd2 !important;
+    }
+
+    .btn-primary:active {
+        background-color: #e96b00 !important;
+        border-color: #e96b00 !important;
+    }
+
+    .btn-primary:focus-visible {
+        box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.35);
+    }
+</style>
+
+{% endblock %}

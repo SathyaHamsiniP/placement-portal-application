@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Campus Placement Portal - Build Your Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #f97316;
+            /* Vibrant Orange */
+            --text-light: #ffffff;
+            --text-dark: #1e293b;
+            --premium-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('/static/images/hero.png') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 950px;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+            line-height: 1.05;
+        }
+
+        .hero-content p {
+            font-size: 1.35rem;
+            margin-bottom: 3.5rem;
+            opacity: 0.9;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .navbar-custom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 2rem 0;
+        }
+
+        .navbar-brand-custom {
+            color: white !important;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -1.5px;
+            text-decoration: none;
+        }
+
+        .btn-cta {
+            padding: 1.1rem 3.5rem;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 10px 15px;
+            border: none;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-student {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-student:hover {
+            background-color: #ea580c;
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-company {
+            background-color: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4) !important;
+        }
+
+        .btn-company:hover {
+            background-color: white;
+            color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .login-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .login-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .features {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .feature-card {
+            padding: 40px;
+            border-radius: 24px;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            height: 100%;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar-custom">
+        <div class="container d-flex justify-content-between align-items-right">
+            <div>
+                <a href="/login" class="login-link">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Start Building Your Career</h1>
+            <p>The elite ecosystem connecting students with global industry leaders through data-driven recruitment.</p>
+            <div class="cta-group">
+                <a href="/student/signup" class="btn-cta btn-student">Explore Career Options</a>
+                <a href="/company/signup" class="btn-cta btn-company">Hire Top Talent</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features text-center">
+        <div class="container">
+            <h2 class="mb-5 fw-800">Designed for Trust and Excellence</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <span class="feature-icon">🚀</span>
+                        <h4 class="feature-title">Fast-Track</h4>
+                        <p class="text-muted">Streamlined application workflows designed for maximum speed and
+                            efficiency.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <span class="feature-icon">🛡️</span>
+                        <h4 class="feature-title">Verified</h4>
+                        <p class="text-muted">Every job post and company is manually vetted by our administrative team.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <span class="feature-icon">📊</span>
+                        <h4 class="feature-title">Analytics</h4>
+                        <p class="text-muted">Gain deep insights into recruitment trends and candidate performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 60px 0; background: var(--primary-color); color: white;" class="text-center">
+        <div class="container">
+            <p class="mb-0 small opacity-50">&copy; 2026 Campus Placement Portal - Administered by Campus Placement Cell
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>

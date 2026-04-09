@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div style="border-left: 5px solid var(--primary-color); padding-left: 15px;">
+                    <h5 class="mb-0 fs-5">Account Settings</h5>
+                    <span class="text-muted small fw-bold uppercase">Update your professional data</span>
+                </div>
+                <a href="/student/home" class="btn btn-outline-secondary btn-sm">Discard Changes</a>
+            </div>
+
+            <form action="/student/profile/update" method="POST" enctype="multipart/form-data" class="row g-3">
+                <div class="col-12 mt-4">
+                    <label class="form-label small fw-bold text-muted uppercase">Full Name</label>
+                    <input type="text" name="name" class="form-control" value="{{ student.name }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted uppercase">Phone Number</label>
+                    <input type="text" name="phone" class="form-control" value="{{ student.phone }}" required>
+                </div>
+                <div class="col-md-6 mt-4">
+                    <label class="form-label small fw-bold text-muted uppercase">Branch</label>
+                    <input type="text" name="branch" class="form-control" value="{{ student.branch }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted uppercase">Current CGPA</label>
+                    <input type="number" step="0.01" name="cgpa" class="form-control" value="{{ student.cgpa }}"
+                        required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted uppercase">Graduation Year</label>
+                    <input type="number" name="grad_year" class="form-control" value="{{ student.grad_year }}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold text-muted uppercase">Key Skills (Comma separated)</label>
+                    <textarea name="skills" class="form-control" rows="2"
+                        placeholder="e.g. Python, SQL, React">{{ student.skills }}</textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold text-muted uppercase">Upload Updated Resume (PDF)</label>
+                    <div class="input-group">
+                        <input type="file" name="resume" class="form-control" accept=".pdf">
+                        <label class="input-group-text bg-light"><i class="bi bi-file-earmark-pdf"></i></label>
+                    </div>
+                    {% if student.resume %}
+                    <div class="mt-2 text-muted small px-1">
+                        Current file: <a href="/static/uploads/resumes/{{ student.resume }}" target="_blank"
+                            class="text-primary">{{ student.resume }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-12 mt-5">
+                    <hr class="text-muted opacity-25 mb-4">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold">
+                            <i class="bi bi-check2-circle me-2"></i> Save Profile Details
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
