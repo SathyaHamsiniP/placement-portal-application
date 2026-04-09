@@ -1,8 +1,10 @@
-# Placement Coordination System (Flask Implementation)
+# Placement Workflow Coordination System (Flask, SQLAlchemy)
 
 ## Project Motivation
 
-Campus recruitment workflows involve multiple approval layers, eligibility filtering, and structured communication between students and recruiters. This project implements a lightweight placement coordination system that models these interactions through role-specific dashboards and controlled application pipelines.
+Campus recruitment workflows involve multi-stage approvals, eligibility filtering, and structured coordination between administrators, recruiters, and students. 
+
+This project implements a role-based workflow coordination system that models these interactions through controlled application pipelines, approval gates, and recruiter-side analytics dashboards. The system simulates a simplified applicant-tracking and placement-drive management platform rather than a basic job-posting portal.
 
 The system was designed to simulate a simplified recruiter-side applicant tracking workflow rather than a basic job-posting portal.
 
@@ -10,14 +12,14 @@ The system was designed to simulate a simplified recruiter-side applicant tracki
 
 ## Architectural Approach
 
-The application follows a modular Blueprint-based structure separating responsibilities into four independent components:
+The application follows a modular Blueprint-based architecture separating responsibilities into independent service layers:
 
-* authentication controller
+* authentication service
 * administrator supervision panel
-* recruiter workspace
+* recruiter workflow workspace
 * student interaction portal
 
-This separation allows each role to operate independently while sharing a consistent database layer.
+This modular separation enables scalable workflow orchestration while maintaining a shared relational data layer through SQLAlchemy ORM.
 
 ---
 
@@ -192,4 +194,4 @@ This system emphasizes workflow correctness over interface complexity. The focus
 * supporting structured recruiter analytics
 * preventing duplicate submissions
 
-These behaviors together approximate a simplified campus recruitment coordination environment.
+These components together simulate a structured placement workflow coordination environment similar to lightweight enterprise recruitment management systems.
